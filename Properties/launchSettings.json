@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "taskfp2": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7162",
+      "launchBrowser": false
+    }
+  }
+}
