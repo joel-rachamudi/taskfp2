@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
 namespace taskfp2
 {
@@ -14,12 +16,19 @@ namespace taskfp2
             if (myQueueItem != null)
             {
 
-                HttpClient client = new HttpClient();
-                string url = Environment.GetEnvironmentVariable("Endpoint");
-                try
+               // HttpClient _client = new HttpClient();
+                
+                var keyVaultName = Environment.GetEnvironmentVariable("AzureKeyVaultName");
+                var credential = new DefaultAzureCredential();
+                var client = new SecretClient(new Uri($"https://{keyVaultName}.vault.azure.net/"), credential);
+                var secret = await client.GetSecretAsync("taskfp2");
+                var secretValue = secret.Value.Value;
+                string url = secretValue;
+                log.LogInformation("the secret value from queue\n");
+                log.LogInformation(url);
+               /* try
                 {
-
-                    HttpResponseMessage response = await client.GetAsync(url);
+                    HttpResponseMessage response = await _client.GetAsync(url);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -27,18 +36,23 @@ namespace taskfp2
                         log.LogInformation($"the resoponse from http trigger:\n {responseBody}");
 
                     }
+
                     else
                     {
                         log.LogInformation($"Request failed with status code: {response.StatusCode}");
                     }
-
                 }
+
+
                 catch (Exception ex)
                 {
                     log.LogInformation($"Error: {ex.Message}");
-                }
+
+                } */
+                log.LogInformation($"the resoponse from http trigger:\n {secretValue}");
                 log.LogInformation(".......now the message from service bus stay tuned........");
                 log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
+
             }
         }
     }
