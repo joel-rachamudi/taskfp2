@@ -16,7 +16,7 @@ namespace taskfp2
             if (myQueueItem != null)
             {
 
-               // HttpClient _client = new HttpClient();
+                HttpClient _client = new HttpClient();
                 
                 var keyVaultName = Environment.GetEnvironmentVariable("AzureKeyVaultName");
                 var credential = new DefaultAzureCredential();
@@ -26,7 +26,7 @@ namespace taskfp2
                 string url = secretValue;
                 log.LogInformation("the secret value from queue\n");
                 log.LogInformation(url);
-               /* try
+                try
                 {
                     HttpResponseMessage response = await _client.GetAsync(url);
 
@@ -48,8 +48,8 @@ namespace taskfp2
                 {
                     log.LogInformation($"Error: {ex.Message}");
 
-                } */
-                log.LogInformation($"the resoponse from http trigger:\n {secretValue}");
+                } 
+                //log.LogInformation($"the resoponse from http trigger:\n {secretValue}");
                 log.LogInformation(".......now the message from service bus stay tuned........");
                 log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
 
